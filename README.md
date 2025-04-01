@@ -40,7 +40,7 @@ By setting `--save_path`, you can save the image at certain view.
 
 By setting `--draw_hist`, you can generate figures like this:
 
-<img src="D:\PossLab\repos\LangSplat\lgs_vis\demo\distribution.png" alt="distribution" style="zoom: 50%;" />
+<img src="demo/distribution.png" alt="distribution" style="zoom: 50%;" />
 
 #### 3D Query
 
