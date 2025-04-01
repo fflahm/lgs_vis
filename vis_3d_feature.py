@@ -33,7 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("--ae_ckpt", type=str, default="../data/lerf/teatime/ae_ckpt/best_ckpt.pth")
     parser.add_argument("--load_cam", action="store_true")
     parser.add_argument("--cam_id", type=int, default=25)
-    parser.add_argument("--cam_json", type=str, default="../..//data/lerf/teatime/output/teatime_3/cameras.json")
+    parser.add_argument("--cam_json", type=str, default="../data/lerf/teatime/output/teatime_3/cameras.json")
     parser.add_argument("--draw_hist", action="store_true")
     parser.add_argument("--mult_by_opac", action="store_true")
     parser.add_argument("--opac_filter", action="store_true")
