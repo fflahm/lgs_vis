@@ -18,7 +18,7 @@ pip install open3d
 
 By running `vis_3d_feature.py`, you can see the 3D features of LGS model directly in an open3d viewer and save images like this:
 
-<img src="D:\PossLab\repos\LangSplat\lgs_vis\demo\vis_3d.png" alt="vis_3d" style="zoom: 25%;" />
+<img src="demo/vis_3d.png" alt="vis_3d" style="zoom: 25%;" />
 
 Recommended arguments 1:
 
