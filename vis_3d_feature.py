@@ -8,21 +8,13 @@ from scene.gaussian_model import GaussianModel
 from autoencoder.model import Autoencoder
 
 from argparse import ArgumentParser
-import matplotlib.pyplot as plt
 import random
 
-from o3d_utils import load_camera, visualize_point_cloud
+from o3d_utils import load_camera, visualize_point_cloud, draw_hist
 
 def sigmoid(x):
     """Sigmoid function."""
     return 1 / (1 + np.exp(-x))
-
-def draw_hist(data, label):
-    plt.hist(data, bins=30, density=False, alpha=0.6, color='b', edgecolor='black')
-    plt.xlabel('Value')
-    plt.ylabel('Number')
-    plt.title(f'Histogram of {label}')
-    plt.show()
 
 if __name__ == "__main__":
     # Arguments
@@ -41,6 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("--pca", action="store_true")
     parser.add_argument("--outlier_filter", action="store_true")
     parser.add_argument("--outlier_thresh", type=float, default=3.0)
+    parser.add_argument("--one_clip", action="store_true") # Same normalization with 2d
     parser.add_argument("--save_path", type=str, default=None)
     args = parser.parse_args()
     args.pca = args.pca | args.decoding # features after decoding need pca
@@ -55,7 +48,7 @@ if __name__ == "__main__":
     points = gaussians._xyz.detach().cpu().numpy() # (N, 3)
     colors = gaussians._language_feature.detach().cpu() # (N, 3)
     opacity = gaussians._opacity.squeeze(1).detach().cpu().numpy() # (N,)
-    opacity = sigmoid(opacity) # most from 0 to 1
+    opacity = sigmoid(opacity)
     if args.draw_hist:
         for i in range(3):
             draw_hist(colors[:, i], f"Color_{i}_Origin")
@@ -111,12 +104,15 @@ if __name__ == "__main__":
         bins = colors[:, 2]
 
     # Normalize
-    colors[:, 0] -= rins.min()
-    colors[:, 1] -= gins.min()
-    colors[:, 2] -= bins.min()
-    colors[:, 0] /= rins.max() - rins.min()
-    colors[:, 1] /= gins.max() - gins.min()
-    colors[:, 2] /= bins.max() - bins.min()
+    if args.one_clip:
+        colors = (colors + 1) / 2.0
+    else:
+        colors[:, 0] -= rins.min()
+        colors[:, 1] -= gins.min()
+        colors[:, 2] -= bins.min()
+        colors[:, 0] /= rins.max() - rins.min()
+        colors[:, 1] /= gins.max() - gins.min()
+        colors[:, 2] /= bins.max() - bins.min()
     colors = torch.clamp(colors, 0, 1).numpy()
     if args.draw_hist: 
         for i in range(3):
